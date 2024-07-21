@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube View Increaser</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .iframe-container {
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ccc;
+        }
+        .control-buttons {
+            margin-top: 20px;
+        }
+        .views-counter {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand text-center" href="#">YouTube View Increaser</a>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Load YouTube Videos in Multiple iFrames</h5>
+                        <input type="text" id="urlInput" class="form-control" placeholder="Enter YouTube URL here">
+                        <input type="number" id="playDuration" class="form-control mt-2" placeholder="Enter play duration in seconds (max 60)" min="1" max="60">
+                        <div class="control-buttons row justify-content-center">
+                            <div class="col-md-4"><button onclick="loadIframes()" class="btn btn-primary btn-block mt-3">Submit</button></div>
+                            <div class="col-md-4"><button onclick="stopVideos()" class="btn btn-danger btn-block mt-3">Stop</button></div>
+                            <div class="col-md-4"><button onclick="resetIframes()" class="btn btn-secondary btn-block mt-3">Reset</button></div>
+                        </div>
+                        <div class="views-counter text-center mt-4">
+                            <h5>Total Views: <span id="totalViews">0</span></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="iframe-container row mt-4">
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe1"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe2"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe3"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe4"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe5"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe6"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe7"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe8"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe9"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe10"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe11"></iframe></div>
+            <div class="col-md-3 col-sm-6 mb-4"><iframe id="iframe12"></iframe></div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center py-3 mt-4">
+        <p class="mb-0">Created by Ankit Agrawal</p>
+        <p class="mb-0">Date: July 21, 2024</p>
+        <p class="mb-0">
+            <a href="https://github.com/your-github-username/repository" target="_blank">View on GitHub</a>
+        </p>
+    </footer>
+
+    <script>
+        let playInterval;
+        let views = Array(12).fill(0);
+
+        function loadIframes() {
+            clearInterval(playInterval);
+
+            let url = document.getElementById('urlInput').value;
+            let playDuration = parseInt(document.getElementById('playDuration').value, 10);
+            if (!playDuration || playDuration < 1 || playDuration > 60) {
+                playDuration = 60;
+            }
+
+            let youtubeUrlPattern = /^https:\/\/www\.youtube\.com\/watch\?v=([\w-]{11})/;
+            let match = url.match(youtubeUrlPattern);
+
+            if (match && match[1]) {
+                let videoId = match[1];
+                let autoplayUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&vq=small`;
+
+                for (let i = 1; i <= 12; i++) {
+                    document.getElementById('iframe' + i).src = autoplayUrl;
+                }
+
+                playInterval = setInterval(() => {
+                    for (let i = 1; i <= 12; i++) {
+                        document.getElementById('iframe' + i).src = autoplayUrl;
+                        views[i - 1]++;
+                    }
+                    updateViewCounts();
+                }, playDuration * 1000);
+            } else {
+                alert("Please enter a valid YouTube video URL.");
+            }
+        }
+
+        function stopVideos() {
+            clearInterval(playInterval);
+        }
+
+        function resetIframes() {
+            clearInterval(playInterval);
+            for (let i = 1; i <= 12; i++) {
+                document.getElementById('iframe' + i).src = '';
+            }
+            views.fill(0);
+            updateViewCounts();
+        }
+
+        function updateViewCounts() {
+            let totalViews = views.reduce((acc, curr) => acc + curr, 0);
+            document.getElementById('totalViews').innerText = totalViews;
+            for (let i = 1; i <= 12; i++) {
+                console.log(`Iframe ${i} views: ${views[i - 1]}`);
+            }
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
